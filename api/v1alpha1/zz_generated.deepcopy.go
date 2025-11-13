@@ -1844,6 +1844,13 @@ func (in *HumioNodeSpec) DeepCopyInto(out *HumioNodeSpec) {
 			(*out)[key] = val
 		}
 	}
+	if in.InitServiceAccountAnnotations != nil {
+		in, out := &in.InitServiceAccountAnnotations, &out.InitServiceAccountAnnotations
+		*out = make(map[string]string, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
+		}
+	}
 	if in.PodLabels != nil {
 		in, out := &in.PodLabels, &out.PodLabels
 		*out = make(map[string]string, len(*in))

@@ -51,7 +51,7 @@ const (
 
 	// namespaced resources:
 	HumioServiceAccountNameSuffix           = "humio"
-	initServiceAccountNameSuffix            = "init"
+	InitServiceAccountNameSuffix            = "init"
 	initServiceAccountSecretNameIdentifier  = "init"
 	extraKafkaConfigsConfigMapNameSuffix    = "extra-kafka-configs"
 	viewGroupPermissionsConfigMapNameSuffix = "view-group-permissions"
@@ -606,7 +606,7 @@ func (hnp *HumioNodePool) GetInitServiceAccountName() string {
 	if hnp.humioNodeSpec.InitServiceAccountName != "" {
 		return hnp.humioNodeSpec.InitServiceAccountName
 	}
-	return fmt.Sprintf("%s-%s", hnp.GetNodePoolName(), initServiceAccountNameSuffix)
+	return fmt.Sprintf("%s-%s", hnp.GetNodePoolName(), InitServiceAccountNameSuffix)
 }
 
 func (hnp *HumioNodePool) InitServiceAccountIsSetByUser() bool {
@@ -641,6 +641,10 @@ func (hnp *HumioNodePool) GetHumioServiceAccountName() string {
 
 func (hnp *HumioNodePool) GetHumioServiceAccountAnnotations() map[string]string {
 	return hnp.humioNodeSpec.HumioServiceAccountAnnotations
+}
+
+func (hnp *HumioNodePool) GetInitServiceAccountAnnotations() map[string]string {
+	return hnp.humioNodeSpec.InitServiceAccountAnnotations
 }
 
 func (hnp *HumioNodePool) GetContainerReadinessProbe() *corev1.Probe {

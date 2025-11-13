@@ -903,7 +903,7 @@ func (r *HumioClusterReconciler) ensureInitContainerPermissions(ctx context.Cont
 	// assume that the nodes are running. Additionally, if we pre allocate the zones to the humio pods, we would be required
 	// to have an autoscaling group per zone.
 
-	if err := r.ensureServiceAccountExists(ctx, hc, hnp, hnp.GetInitServiceAccountName(), map[string]string{}); err != nil {
+	if err := r.ensureServiceAccountExists(ctx, hc, hnp, hnp.GetInitServiceAccountName(), hnp.GetInitServiceAccountAnnotations()); err != nil {
 		return r.logErrorAndReturn(err, "unable to ensure init service account exists")
 	}
 

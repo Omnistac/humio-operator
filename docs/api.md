@@ -4465,6 +4465,13 @@ The value from ImageSource takes precedence over Image.<br/>
         </td>
         <td>false</td>
       </tr><tr>
+        <td><b>initServiceAccountAnnotations</b></td>
+        <td>map[string]string</td>
+        <td>
+          InitServiceAccountAnnotations is the set of annotations added to the Kubernetes Service Account that will be attached to the init container in the humio pod<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
         <td><b>nodeCount</b></td>
         <td>integer</td>
         <td>
@@ -16924,6 +16931,13 @@ The value from ImageSource takes precedence over Image.<br/>
         <td>string</td>
         <td>
           InitServiceAccountName is the name of the Kubernetes Service Account that will be attached to the init container in the humio pod.<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b>initServiceAccountAnnotations</b></td>
+        <td>map[string]string</td>
+        <td>
+          InitServiceAccountAnnotations is the set of annotations added to the Kubernetes Service Account that will be attached to the init container in the humio pod<br/>
         </td>
         <td>false</td>
       </tr><tr>

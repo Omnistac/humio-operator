@@ -257,6 +257,9 @@ type HumioNodeSpec struct {
 	// InitServiceAccountName is the name of the Kubernetes Service Account that will be attached to the init container in the humio pod.
 	InitServiceAccountName string `json:"initServiceAccountName,omitempty"`
 
+	// InitServiceAccountAnnotations is the set of annotations added to the Kubernetes Service Account that will be attached to the init container in the humio pod
+	InitServiceAccountAnnotations map[string]string `json:"initServiceAccountAnnotations,omitempty"`
+
 	// PodLabels can be used to specify labels that will be added to the Humio pods
 	PodLabels map[string]string `json:"podLabels,omitempty"`
 

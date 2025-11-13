@@ -2530,6 +2530,61 @@ var _ = Describe("HumioCluster Controller", func() {
 		})
 	})
 
+	Context("Humio Cluster Init Service Account Annotations", Label("envtest", "dummy", "real"), func() {
+		It("Should correctly handle init service account annotations", func() {
+			key := types.NamespacedName{
+				Name:      "humiocluster-init-sa-annotations",
+				Namespace: testProcessNamespace,
+			}
+			toCreate := suite.ConstructBasicSingleNodeHumioCluster(key, true)
+
+			suite.UsingClusterBy(key.Name, "Creating the cluster successfully")
+			ctx := context.Background()
+			suite.CreateAndBootstrapCluster(ctx, k8sClient, testHumioClient, toCreate, true, humiov1alpha1.HumioClusterStateRunning, testTimeout)
+			defer suite.CleanupCluster(ctx, k8sClient, toCreate)
+			initServiceAccountName := fmt.Sprintf("%s-%s", key.Name, controller.InitServiceAccountNameSuffix)
+
+			Eventually(func() error {
+				_, err := kubernetes.GetServiceAccount(ctx, k8sClient, initServiceAccountName, key.Namespace)
+				return err
+			}, testTimeout, suite.TestInterval).Should(Succeed())
+			serviceAccount, _ := kubernetes.GetServiceAccount(ctx, k8sClient, initServiceAccountName, key.Namespace)
+			Expect(serviceAccount.Annotations).Should(BeNil())
+
+			suite.UsingClusterBy(key.Name, "Adding an annotation successfully")
+			var updatedHumioCluster humiov1alpha1.HumioCluster
+			Eventually(func() error {
+				err := k8sClient.Get(ctx, key, &updatedHumioCluster)
+				if err != nil {
+					return err
+				}
+				updatedHumioCluster.Spec.InitServiceAccountAnnotations = map[string]string{"some-init-annotation": "true"}
+				return k8sClient.Update(ctx, &updatedHumioCluster)
+			}, testTimeout, suite.TestInterval).Should(Succeed())
+			Eventually(func() bool {
+				serviceAccount, _ = kubernetes.GetServiceAccount(ctx, k8sClient, initServiceAccountName, key.Namespace)
+				_, ok := serviceAccount.Annotations["some-init-annotation"]
+				return ok
+			}, testTimeout, suite.TestInterval).Should(BeTrue())
+			Expect(serviceAccount.Annotations["some-init-annotation"]).Should(Equal("true"))
+
+			suite.UsingClusterBy(key.Name, "Removing all annotations successfully")
+			Eventually(func() error {
+				updatedHumioCluster = humiov1alpha1.HumioCluster{}
+				err := k8sClient.Get(ctx, key, &updatedHumioCluster)
+				if err != nil {
+					return err
+				}
+				updatedHumioCluster.Spec.InitServiceAccountAnnotations = nil
+				return k8sClient.Update(ctx, &updatedHumioCluster)
+			}, testTimeout, suite.TestInterval).Should(Succeed())
+			Eventually(func() map[string]string {
+				serviceAccount, _ = kubernetes.GetServiceAccount(ctx, k8sClient, initServiceAccountName, key.Namespace)
+				return serviceAccount.Annotations
+			}, testTimeout, suite.TestInterval).Should(BeNil())
+		})
+	})
+
 	Context("Humio Cluster Pod Security Context", Label("envtest", "dummy", "real"), func() {
 		It("Should correctly handle pod security context", func() {
 			key := types.NamespacedName{

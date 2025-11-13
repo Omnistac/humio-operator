@@ -6026,6 +6026,13 @@ spec:
                       will be using TLS for requests from external clients
                     type: boolean
                 type: object
+              initServiceAccountAnnotations:
+                additionalProperties:
+                  type: string
+                description: InitServiceAccountAnnotations is the set of annotations
+                  added to the Kubernetes Service Account that will be attached to
+                  the init container in the humio pod
+                type: object
               initServiceAccountName:
                 description: InitServiceAccountName is the name of the Kubernetes
                   Service Account that will be attached to the init container in the
@@ -11883,6 +11890,13 @@ spec:
                               - key
                               type: object
                               x-kubernetes-map-type: atomic
+                          type: object
+                        initServiceAccountAnnotations:
+                          additionalProperties:
+                            type: string
+                          description: InitServiceAccountAnnotations is the set of
+                            annotations added to the Kubernetes Service Account that
+                            will be attached to the init container in the humio pod
                           type: object
                         initServiceAccountName:
                           description: InitServiceAccountName is the name of the Kubernetes
